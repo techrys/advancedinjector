@@ -1,90 +1,93 @@
-# advancedinjector
-Kernel-Mode DLL Injector  A C++ kernel-level DLL injector for testing anti-cheat systems in game development on Windows 11. Features manual mapping, thread hijacking, and payload encryption to challenge modern kernel anti-cheats like BattlEye and EAC. Includes a kernel driver (.sys) and user-mode loader (.exe). For educational use only.
+<div align="center"> <h1>Kernel-Mode DLL Injector</h1> <p><em>Advanced Anti-Cheat Testing for Game Development</em></p> <img src="https://img.shields.io/badge/Windows-11-blue?style=flat-square&logo=windows" alt="Windows 11"> <img src="https://img.shields.io/badge/Language-C++-green?style=flat-square" alt="C++"> <img src="https://img.shields.io/badge/License-MIT-orange?style=flat-square" alt="MIT License"> </div>
+🚀 Overview
 
-Kernel-Mode DLL Injector
+The Kernel-Mode DLL Injector is a cutting-edge tool built in C++ to test anti-cheat systems in game development. Targeting Windows 11, it uses kernel-level techniques to inject DLLs into processes, challenging modern anti-cheats like BattlEye and EAC.
 
-A C++ kernel-level DLL injector for testing anti-cheat systems in game development on Windows 11.
-Overview
+    Components:
+        modern_injector.sys: Kernel driver for injection.
+        loader.exe: User-mode utility to trigger it.
+    Purpose: Research and anti-cheat validation.
 
-    modern_injector.cpp: Kernel driver (.sys) that manually maps a DLL into a process.
-    loader.cpp: User-mode app (.exe) to trigger injection.
+🛠️ How It Works
 
-How It Works
+This injector leverages advanced kernel techniques:
 
-    Loader: Sends PID and DLL path to the driver via IOCTL.
-    Driver: Encrypts DLL, maps it into the target process, and hijacks a thread to run DllMain.
-    Stealth: Avoids user-mode APIs, uses kernel memory ops.
+    Payload Encryption: XOR-encrypts the DLL to evade static detection.
+    Manual Mapping: Maps the DLL directly into the target process’s memory.
+    Thread Hijacking: Executes DllMain via an existing thread, avoiding new thread creation.
+    Stealth: Bypasses user-mode hooks with kernel memory operations.
 
-Prerequisites
+Perfect for simulating sophisticated injection methods in a controlled environment.
+📋 Prerequisites
 
-    Windows 11
-    Visual Studio 2022
-    WDK 10.0.26100.2454
-    Windows SDK 10.0.26100.x
-    Admin access
+    OS: Windows 11 (23H2+, Build 22631.xxx)
+    IDE: Visual Studio 2022
+    Tools: WDK 10.0.26100.2454, Windows SDK 10.0.26100.x
+    Privileges: Admin access
 
-Project Structure
+📂 Project Structure
 text
-kernelmode/
-├── kernelmode.vcxproj
-├── modern_injector.cpp
-└── x64/Release/ (output: modern_injector.sys)
-loader/
-├── loader.vcxproj
-├── loader.cpp
-└── x64/Release/ (output: loader.exe)
-README.md
-Compilation
-Setup
+├── kernelmode/
+│   ├── modern_injector.cpp    # Kernel driver source
+│   └── x64/Release/           # Output: modern_injector.sys
+├── loader/
+│   ├── loader.cpp            # User-mode loader source
+│   └── x64/Release/           # Output: loader.exe
+└── README.md                 # Documentation
+🔧 Compilation
+1. Environment Setup
 
-    Install Visual Studio 2022 with "Desktop development with C++".
+    Install Visual Studio 2022: Include "Desktop development with C++".
     Add WDK:
         Download WDK 10.0.26100.2454.
         Run wdksetup.exe → Install with matching SDK.
 
-Build Driver (.sys)
+2. Build the Driver (.sys)
 
-    Open kernelmode.vcxproj or create an "Empty WDM Driver" project.
+    Open kernelmode/kernelmode.vcxproj or create an "Empty WDM Driver" project.
     Add modern_injector.cpp to "Source Files".
-    Properties:
+    Configure:
         Configuration Type: Driver
         Target Name: modern_injector
         Output File: $(OutDir)\modern_injector.sys
-        Config: Release, Platform: x64
-    Build > Rebuild Solution.
+        Release | x64
+    Build: Build > Rebuild Solution.
 
-Build Loader (.exe)
+3. Build the Loader (.exe)
 
-    Open loader.vcxproj or create a "Console App" project.
+    Open loader/loader.vcxproj or create a "Console App".
     Add loader.cpp.
-    Config: Release, Platform: x64.
-    Build > Rebuild Solution.
+    Set: Release | x64.
+    Build: Build > Rebuild Solution.
 
-Running
+▶️ Running
 
-    Enable test signing:
-    text
+    Enable Test Signing:
+    cmd
 
 bcdedit /set testsigning on
 Reboot.
-Load driver (Admin CMD):
-text
+Load Driver (Admin CMD):
+cmd
 
     sc create ModernInjector binPath="path\to\modern_injector.sys" type=kernel
     sc start ModernInjector
-    Run loader:
-        Edit loader.cpp: Set PID and DLL path.
+    Run Loader:
+        Edit loader.cpp: Set target PID and DLL path.
         Rebuild → Run loader.exe as Admin.
 
-Troubleshooting
+⚠️ Troubleshooting
 
-    LNK1169: Ensure only one .cpp in driver project; clean and rebuild.
-    .exe Output: Set Configuration Type to Driver.
-    Driver Fails: Verify test signing; check Event Viewer.
+    Linker Errors (LNK1169): Ensure only modern_injector.cpp in driver project; clean and rebuild.
+    Wrong Output: Verify Configuration Type is Driver for .sys.
+    Driver Load Fails: Check test signing; review Event Viewer logs.
 
-Contributing
+🤝 Contributing
 
-Fork, edit, and PR. Report issues on GitHub.
-License
+    Fork → Modify → Pull Request.
+    Open issues for bugs or enhancements.
 
-For testing only—use responsibly. No warranty.
+📜 License
+
+MIT License – For testing only. Use responsibly in development environments.
+<div align="center"> <p><strong>Built for innovation, tested with precision.</strong></p> </div>
